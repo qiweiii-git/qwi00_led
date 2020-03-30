@@ -4,21 +4,21 @@
 # Change History:
 #  VER.   Author         DATE              Change Description
 #  1.0    Qiwei Wu       May. 4, 2019      Initial Release
+#  1.1    Qiwei Wu       Mar.30, 2020      Improvement
 #*****************************************************************************
 #!/bin/bash
 
-FileSys='..'
 BuildDir='.build'
-BuildFileDir='build'
 BitFileDir='impl_1/'
-CopyBitFileDir='bin'
 CopyBitRoute='../../../..'
 
 PrjName=$1
 ChipType=$2
+BuildFileDir=$3
+CopyBitFileDir=$4
+CopyHdf=$5
 echo "Info: Project Name is $PrjName, ChipType is $ChipType"
 
-cd $FileSys
 #make dir
 if [ -d $BuildDir ]; then
    echo "Warning: Building Directory $BuildDir Exist"
@@ -26,7 +26,7 @@ if [ -d $BuildDir ]; then
    echo "Info: Old Building Directory $BuildDir Removing"
 fi
 mkdir $BuildDir
-echo "Info: Building Directory $FileSys/$BuildDir Establish"
+echo "Info: Building Directory $BuildDir Establish"
 
 #copy source files
 cp * $BuildDir -r
@@ -45,10 +45,14 @@ cd $PrjName.runs/$BitFileDir
 if [ -f $PrjName.bit ]; then
    cp $PrjName.bit $CopyBitRoute/$CopyBitFileDir
    echo "Info: $PrjName bit file moved to BIN"
+   if [ $CopyHdf -eq 1 ]; then
+      cp $CopyBitRoute/$BuildDir/$BuildFileDir/$PrjName.sdk/$PrjName.hdf $CopyBitRoute/$CopyBitFileDir
+      echo "Info: $PrjName hdf file moved to BIN"
+   fi
    #clean
    cd $CopyBitRoute
    rm -rf $BuildDir
-   echo "Info: $PrjName bit file finish making"
+   echo "Info: $PrjName finish building"
    echo -e "\n   Success \n"
 else
    echo "Error: $PrjName Project built failed"
