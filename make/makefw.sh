@@ -9,6 +9,8 @@
 #!/bin/bash
 
 BuildDir='.build'
+CompileFileDir='make'
+ReturnRoute='../..'
 BitFileDir='impl_1/'
 CopyBitRoute='../../../..'
 
@@ -30,6 +32,18 @@ echo "Info: Building Directory $BuildDir Establish"
 
 #copy source files
 cp * $BuildDir -r
+
+#compiling
+cd $BuildDir/$CompileFileDir
+echo "Info: $PrjName is compiling"
+./$MakeFwFileDir/compile.sh
+
+if [ ! -e fwCompiled ]; then
+   echo "Error: $PrjName Project compile failed"
+   exit
+fi
+echo "Info: $PrjName is compiled"
+cd $ReturnRoute
 
 #building
 cd $BuildDir/$BuildFileDir
